@@ -9,7 +9,7 @@ const Photos = () => {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [refresh, setRefresh] = useState(false)
+  //const [refresh, setRefresh] = useState(false)
 
   const fetchData = async () => {
 		setLoading(true);
@@ -38,7 +38,7 @@ const Photos = () => {
 	};
 
   const deletePhoto = async (id) => {
-		const response = await fetch(`https://gallery-app-server.vercel.app/photos/${id}`, {
+		await fetch(`https://gallery-app-server.vercel.app/photos/${id}`, {
 			method: "DELETE"
 		});
     //setRefresh(true)
