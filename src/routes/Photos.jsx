@@ -1,14 +1,16 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import Card from "../components/Card";
 
 const Photos = () => {
   const [photos, setPhotos] = useState([]);
-  const [sort, setSort] = useState("asc");
+  const [sort, setSort] = useState("desc");
   const [submited, setSubmited] = useState("");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { id } = useParams()
   //const [refresh, setRefresh] = useState(false)
 
   const fetchData = async () => {
@@ -22,40 +24,40 @@ const Photos = () => {
 		setLoading(false);
 	};
 
-  const sortData = async () => {
-		try {
-			const response = await fetch(
-				"https://gallery-app-server.vercel.app/photos?_sort=id&_order=desc&q=test"
-			);
-			const data = await response.json();
-			setPhotos(data);
-		} catch (err) {
-			setError(err);
-		}
-		setLoading(false);
-	};
+  // const sortData = async () => {
+	// 	try {
+	// 		const response = await fetch(
+	// 			`https://gallery-app-server.vercel.app/photos?_sort=id&_order=desc&q=test`
+	// 		);
+	// 		const data = await response.json();
+	// 		setPhotos(data);
+	// 	} catch (err) {
+	// 		setError(err);
+	// 	}
+	// 	setLoading(false);
+	// };
 
-  const deletePhoto = async (id) => {
-		await fetch(`https://gallery-app-server.vercel.app/photos/${id}`, {
-			method: "DELETE"
-		});
+    const deletePhoto = async (id) => {
+      await fetch(`https://gallery-app-server.vercel.app/photos/${id}`, {
+        method: "DELETE"
+      });
+    }
     //setRefresh(true)
 		// const data = await response.json();
 		// const expectedCaptions = data
 		// .filter((photo) => photo.id !== id)
     //   	.map((photo) => photo.captions)
 		// setPhotos(await expectedCaptions)
-	};
 
   useEffect(() => {
 		setLoading(true);
-		sortData();
-	}, [sort, submited]);
+		deletePhoto(id);
+	}, [id]);
 
   useEffect(() => {
 		setLoading(true);
 		fetchData();
-	}, []);
+	}, [sort, submited]);
 
   if (error) return <h1 style={{ width: "100%", textAlign: "center", marginTop: "20px" }} >Error!</h1>;
 
@@ -64,7 +66,10 @@ const Photos = () => {
       <div className="container">
         <div className="options">
           <select
-            onChange={(e) => setSort(e.target.value)}
+            onChange={(e) => {
+              setSort(e.target.value)
+              fetch(`https://gallery-app-server.vercel.app/photos?_sort${id}&_order${sort}`)
+            }}
             data-testid="sort"
             className="form-select"
             style={{}}
@@ -76,6 +81,7 @@ const Photos = () => {
             onSubmit={(e) => {
               e.preventDefault();
               setSubmited(search);
+              fetch(`https://gallery-app-server.vercel.app/photos?q=${search}`)
             }}
           >
             <input
