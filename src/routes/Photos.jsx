@@ -12,7 +12,6 @@ const Photos = () => {
   //const [refresh, setRefresh] = useState(false)
 
   const fetchData = async () => {
-		setLoading(true);
 		try {
 			const response = await fetch("https://gallery-app-server.vercel.app/photos");
 			const data = await response.json();
@@ -24,7 +23,6 @@ const Photos = () => {
 	};
 
   const sortData = async () => {
-		setLoading(true);
 		try {
 			const response = await fetch(
 				"https://gallery-app-server.vercel.app/photos?_sort=id&_order=desc&q=test"
